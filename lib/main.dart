@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
           title: 'Namer App',
           theme: ThemeData(
             useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 6, 6, 247)), // ColorScheme for entire app
+            colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 10, 236, 165)), // ColorScheme for entire app
           ),
           home: MyHomePage(),
         ),
@@ -77,9 +77,9 @@ class BigCard extends StatelessWidget { // Created after refactoring Text
     ); // Calling copy with on displayMedium returns a copy of the text style with the changes you define. In this case, you're only changing the text color.
        // to get the new color, you once again access the app's theme. The color scheme's onPrimary property defines a color that is a good fit for use on the app's primary color.
     return Card( // type was changed to "Card" with wrap with widget
+      color: theme.colorScheme.primary,
       child: Padding( // Wrapped text with Padding //Wrapped with widget
         padding: const EdgeInsets.all(20), // increased Padding for breathing room
-        
         child: Text(
           pair.asLowerCase,
           style: style,
