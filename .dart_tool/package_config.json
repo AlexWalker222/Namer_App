@@ -32,8 +32,8 @@
       "languageVersion": "2.18"
     },
     {
-      "name": "cupertino_icons",
-      "rootUri": "file:///C:/Users/ALEXW/AppData/Local/Pub/Cache/hosted/pub.dev/cupertino_icons-1.0.5",
+      "name": "english_words",
+      "rootUri": "file:///C:/Users/ALEXW/AppData/Local/Pub/Cache/hosted/pub.dev/english_words-4.0.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -92,8 +92,20 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "nested",
+      "rootUri": "file:///C:/Users/ALEXW/AppData/Local/Pub/Cache/hosted/pub.dev/nested-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "path",
       "rootUri": "file:///C:/Users/ALEXW/AppData/Local/Pub/Cache/hosted/pub.dev/path-1.8.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "provider",
+      "rootUri": "file:///C:/Users/ALEXW/AppData/Local/Pub/Cache/hosted/pub.dev/provider-6.0.5",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -149,10 +161,10 @@
       "name": "namer_app",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "3.0"
+      "languageVersion": "2.19"
     }
   ],
-  "generated": "2023-06-10T13:57:41.012075Z",
+  "generated": "2023-06-10T15:27:39.326876Z",
   "generator": "pub",
   "generatorVersion": "3.0.0"
 }
