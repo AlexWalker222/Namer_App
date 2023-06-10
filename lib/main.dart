@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -41,6 +43,7 @@ class MyHomePage extends StatelessWidget {
 
     return Scaffold(
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.center, // Overriding the children being lumped to the top. This centers the children inside the Column along its main (vertical) axis.
         children: [
           Text('A random AWESOME idea:'), // Example text Change
           BigCard(pair: pair), // Text Widget is now refactored to BigCard
@@ -63,6 +66,8 @@ class BigCard extends StatelessWidget { // Created after refactoring Text
   });
 
   final WordPair pair;
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,10 +77,14 @@ class BigCard extends StatelessWidget { // Created after refactoring Text
     ); // Calling copy with on displayMedium returns a copy of the text style with the changes you define. In this case, you're only changing the text color.
        // to get the new color, you once again access the app's theme. The color scheme's onPrimary property defines a color that is a good fit for use on the app's primary color.
     return Card( // type was changed to "Card" with wrap with widget
-      color: theme.colorScheme.primary, // defines the card's color to be the same as the theme's colorScheme property.
       child: Padding( // Wrapped text with Padding //Wrapped with widget
         padding: const EdgeInsets.all(20), // increased Padding for breathing room
-        child: Text(pair.asLowerCase, style: style),
+        
+        child: Text(
+          pair.asLowerCase,
+          style: style,
+          semanticsLabel: "${pair.first} ${pair.second}", // Improves accesiblity of visually impaired improves screen reader.
+        ),
       ),
     );
   }
