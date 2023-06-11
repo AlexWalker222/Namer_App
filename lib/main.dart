@@ -42,18 +42,20 @@ class MyHomePage extends StatelessWidget {
     var pair = appState.current; // optimized for performance
 
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center, // Overriding the children being lumped to the top. This centers the children inside the Column along its main (vertical) axis.
-        children: [
-          Text('A random AWESOME idea:'), // Example text Change
-          BigCard(pair: pair), // Text Widget is now refactored to BigCard
-          ElevatedButton(  // Button Widget
-            onPressed: () {
-              appState.getNext();  // button action
-            },
-            child: Text('Next'), //button Text
-          ),
-        ],
+      body: Center( // Center wrapped Column for centering the UI
+        child: Column( // wraped with Center for center the UI
+          mainAxisAlignment: MainAxisAlignment.center, // Overriding the children being lumped to the top. This centers the children inside the Column along its main (vertical) axis.
+          children: [
+            BigCard(pair: pair), // Text Widget is now refactored to BigCard
+            SizedBox(height: 10),
+            ElevatedButton(  // Button Widget
+              onPressed: () {
+                appState.getNext();  // button action
+              },
+              child: Text('Next'), //button Text
+            ),
+          ],
+        ),
       ),
     );
   }
