@@ -1,8 +1,7 @@
-import 'dart:ui';
-
 import 'package:english_words/english_words.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -10,20 +9,19 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
-        child: MaterialApp(
-          title: 'Namer App',
-          theme: ThemeData(
-            useMaterial3: true,
-            colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 10, 236, 165)), // ColorScheme for entire app
-          ),
-          home: MyHomePage(),
+      child: MaterialApp(
+        title: 'Namer App',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         ),
-      );
+        home: MyHomePage(),
+      ),
+    );
   }
 }
 
@@ -34,9 +32,10 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners();
   }
-  var favorites = <WordPair>[]; // Added a property to myAppState called favorites
-  //also specified that the list can only ever contain word pairs: <WordPair>[]
-  void toggleFavorite() { // This helps make your app more robust
+
+  var favorites = <WordPair>[];
+
+  void toggleFavorite() {
     if (favorites.contains(current)) {
       favorites.remove(current);
     } else {
@@ -45,80 +44,164 @@ class MyAppState extends ChangeNotifier {
     notifyListeners();
   }
 }
-class MyHomePage extends StatelessWidget {
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  var selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    Widget page;
+    switch (selectedIndex) {
+      case 0:
+        page = GeneratorPage();
+        break;
+      case 1:
+        page = FavoritesPage();
+        break;
+      default:
+        throw UnimplementedError('no widget for $selectedIndex');
+    }
+
+    return LayoutBuilder(builder: (context, constraints) {
+      return Scaffold(
+        body: Row(
+          children: [
+            SafeArea(
+              child: NavigationRail(
+                extended: constraints.maxWidth >= 600,
+                destinations: [
+                  NavigationRailDestination(
+                    icon: Icon(Icons.home),
+                    label: Text('Home'),
+                  ),
+                  NavigationRailDestination(
+                    icon: Icon(Icons.favorite),
+                    label: Text('Favorites'),
+                  ),
+                ],
+                selectedIndex: selectedIndex,
+                onDestinationSelected: (value) {
+                  setState(() {
+                    selectedIndex = value;
+                  });
+                },
+              ),
+            ),
+            Expanded(
+              child: Container(
+                color: Theme.of(context).colorScheme.primaryContainer,
+                child: page,
+              ),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class GeneratorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var pair = appState.current; // optimized for performance
+    var pair = appState.current;
 
     IconData icon;
-    if(appState.favorites.contains(pair)) {
+    if (appState.favorites.contains(pair)) {
       icon = Icons.favorite;
     } else {
       icon = Icons.favorite_border;
     }
 
-    return Scaffold(
-      body: Center( // Center wrapped Column for centering the UI
-        child: Column( // wraped with Center for center the UI
-          mainAxisAlignment: MainAxisAlignment.center, // Overriding the children being lumped to the top. This centers the children inside the Column along its main (vertical) axis.
-          children: [
-            BigCard(pair: pair), // Text Widget is now refactored to BigCard
-            SizedBox(height: 10),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    appState.toggleFavorite();
-                  },
-                  icon: Icon(icon),
-                  label: Text('Like'),
-                ),
-                SizedBox(width: 10),
-
-                ElevatedButton(  // Button Widget
-                  onPressed: () {
-                    appState.getNext();  // button action
-                  },
-                  child: Text('Next'), //button Text
-                ),
-              ],
-            ),
-          ],
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          BigCard(pair: pair),
+          SizedBox(height: 10),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () {
+                  appState.toggleFavorite();
+                },
+                icon: Icon(icon),
+                label: Text('Like'),
+              ),
+              SizedBox(width: 10),
+              ElevatedButton(
+                onPressed: () {
+                  appState.getNext();
+                },
+                child: Text('Next'),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 }
 
-class BigCard extends StatelessWidget { // Created after refactoring Text
+class BigCard extends StatelessWidget {
   const BigCard({
     super.key,
     required this.pair,
   });
 
   final WordPair pair;
-  
-
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Requests the apps current theme
-    final style = theme.textTheme.displayMedium!.copyWith( // Access the font theme wiht theme.textTheme and displayMedium large style meant for display text
-      color: theme.colorScheme.onPrimary, // the displayMedium could theoretically be null. Dart is null safe, so it won't let you call methods of objects that are potentially null. In this case, though you can use the ! operator ("bang operator) to assure Dart you know what you're doing.
-    ); // Calling copy with on displayMedium returns a copy of the text style with the changes you define. In this case, you're only changing the text color.
-       // to get the new color, you once again access the app's theme. The color scheme's onPrimary property defines a color that is a good fit for use on the app's primary color.
-    return Card( // type was changed to "Card" with wrap with widget
+    final theme = Theme.of(context);
+    final style = theme.textTheme.displayMedium!.copyWith(
+      color: theme.colorScheme.onPrimary,
+    );
+
+    return Card(
       color: theme.colorScheme.primary,
-      child: Padding( // Wrapped text with Padding //Wrapped with widget
-        padding: const EdgeInsets.all(20), // increased Padding for breathing room
+      child: Padding(
+        padding: const EdgeInsets.all(20),
         child: Text(
           pair.asLowerCase,
           style: style,
-          semanticsLabel: "${pair.first} ${pair.second}", // Improves accesiblity of visually impaired improves screen reader.
+          semanticsLabel: "${pair.first} ${pair.second}",
         ),
       ),
+    );
+  }
+}
+
+class FavoritesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
+    if (appState.favorites.isEmpty) {
+      return Center(
+        child: Text('No favorites yet.'),
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20),
+          child: Text('You have '
+              '${appState.favorites.length} favorites:'),
+        ),
+        for (var pair in appState.favorites)
+          ListTile(
+            leading: Icon(Icons.favorite),
+            title: Text(pair.asLowerCase),
+          ),
+      ],
     );
   }
 }
