@@ -34,12 +34,29 @@ class MyAppState extends ChangeNotifier {
     current = WordPair.random();
     notifyListeners();
   }
+  var favorites = <WordPair>[]; // Added a property to myAppState called favorites
+  //also specified that the list can only ever contain word pairs: <WordPair>[]
+  void toggleFavorite() { // This helps make your app more robust
+    if (favorites.contains(current)) {
+      favorites.remove(current);
+    } else {
+      favorites.add(current);
+    }
+    notifyListeners();
+  }
 }
 class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current; // optimized for performance
+
+    IconData icon;
+    if(appState.favorites.contains(pair)) {
+      icon = Icons.favorite;
+    } else {
+      icon = Icons.favorite_border;
+    }
 
     return Scaffold(
       body: Center( // Center wrapped Column for centering the UI
@@ -48,11 +65,25 @@ class MyHomePage extends StatelessWidget {
           children: [
             BigCard(pair: pair), // Text Widget is now refactored to BigCard
             SizedBox(height: 10),
-            ElevatedButton(  // Button Widget
-              onPressed: () {
-                appState.getNext();  // button action
-              },
-              child: Text('Next'), //button Text
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () {
+                    appState.toggleFavorite();
+                  },
+                  icon: Icon(icon),
+                  label: Text('Like'),
+                ),
+                SizedBox(width: 10),
+
+                ElevatedButton(  // Button Widget
+                  onPressed: () {
+                    appState.getNext();  // button action
+                  },
+                  child: Text('Next'), //button Text
+                ),
+              ],
             ),
           ],
         ),
